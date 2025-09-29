@@ -167,7 +167,7 @@ Indexes recommended:
 - PySpark ([etl/pricing_etl.py](cci:7://file:///c:/Users/jessi/Downloads/pricing-app/pricing-app/etl/pricing_etl.py:0:0-0:0)):
   - Reads S3 CSVs, upserts via JDBC (`ON DUPLICATE KEY UPDATE`) or writes curated Parquet.
   - Glue-ready with `GlueContext` and job args.
-  - **Schema aligned** with application database (see [SCHEMA_ALIGNMENT.md](SCHEMA_ALIGNMENT.md)).
+  - **Schema aligned** with application database
 - Spring Batch ([config/BatchConfig.java](cci:7://file:///c:/Users/jessi/Downloads/pricing-app/pricing-app/src/main/java/com/example/pricing/config/BatchConfig.java:0:0-0:0)):
   - Alternate CSV ingestion for local/dev environments.
 
