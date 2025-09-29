@@ -20,8 +20,9 @@ pricing-app/
 ├── etl/
 │   ├── pricing_etl.py       # PySpark ETL: reads CSV from S3, upserts via JDBC or writes curated Parquet
 │   ├── product_clustering_pyspark.py # PySpark clustering prototype by arrival_date/room_type/beds/grade/private_pool
-│   ├── pricing_mysql_schema.sql      # MySQL schema for ETL (align with app schema)
+│   ├── pricing_mysql_schema.sql      # MySQL schema for ETL (aligned with app schema)
 │   └── setup_mysql.sh
+├── SCHEMA_ALIGNMENT.md              # Documentation of ETL and app schema alignment
 ├── src/
 │   ├── main/
 │   │   ├── java/com/example/pricing/
@@ -166,6 +167,7 @@ Indexes recommended:
 - PySpark ([etl/pricing_etl.py](cci:7://file:///c:/Users/jessi/Downloads/pricing-app/pricing-app/etl/pricing_etl.py:0:0-0:0)):
   - Reads S3 CSVs, upserts via JDBC (`ON DUPLICATE KEY UPDATE`) or writes curated Parquet.
   - Glue-ready with `GlueContext` and job args.
+  - **Schema aligned** with application database (see [SCHEMA_ALIGNMENT.md](SCHEMA_ALIGNMENT.md)).
 - Spring Batch ([config/BatchConfig.java](cci:7://file:///c:/Users/jessi/Downloads/pricing-app/pricing-app/src/main/java/com/example/pricing/config/BatchConfig.java:0:0-0:0)):
   - Alternate CSV ingestion for local/dev environments.
 
@@ -183,9 +185,19 @@ Indexes recommended:
 
 - [PricingServiceTest](cci:2://file:///c:/Users/jessi/Downloads/pricing-app/pricing-app/src/test/java/com/example/pricing/PricingServiceTest.java:16:0-110:1) covers key algorithm scenarios: high/low occupancy and fallback to current price.
 
+## Schema Alignment
+
+✅ **ETL and application schemas are now fully aligned.** See [SCHEMA_ALIGNMENT.md](SCHEMA_ALIGNMENT.md) for details.
+
+Key alignments:
+- `prices.value` (was `prices.price` in old ETL schema)
+- `prices.last_updated` (was `prices.ingestion_date`)
+- `products.building_id` foreign key added
+- `bookings` fields aligned: `arrival_date`, `nights`, `price_paid`
+
 ## Notes and Next Steps
 
-- Align ETL schema with application schema (column names, optional ingestion_date).
+- ✅ ~~Align ETL schema with application schema~~ **COMPLETE**
 - Add indices on cluster attributes for faster cluster queries.
 - Build a nightly write-back sync to hotel systems for `price_confirmations.synced=false`.
 - Add endpoints to pivot multi-currency prices and sort by a selected currency if needed.

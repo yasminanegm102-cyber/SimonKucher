@@ -116,7 +116,7 @@ def upsert_to_db(df, table_name, key_columns):
                         stmt = text("""
                             INSERT INTO prices (product_id, currency, value, last_updated)
                             VALUES (:product_id, :currency, :value, :last_updated)
-                            ON DUPLICATE KEY UPDATE value = VALUES(value), last_updated = VALUES(last_updated)
+                            ON DUPLICATE KEY UPDATE value = :value, last_updated = :last_updated
                         """)
                     else:
                         # single-key upsert by id when applicable
