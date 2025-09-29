@@ -185,19 +185,7 @@ Indexes recommended:
 
 - [PricingServiceTest](cci:2://file:///c:/Users/jessi/Downloads/pricing-app/pricing-app/src/test/java/com/example/pricing/PricingServiceTest.java:16:0-110:1) covers key algorithm scenarios: high/low occupancy and fallback to current price.
 
-## Schema Alignment
-
-✅ **ETL and application schemas are now fully aligned.** See [SCHEMA_ALIGNMENT.md](SCHEMA_ALIGNMENT.md) for details.
-
-Key alignments:
-- `prices.value` (was `prices.price` in old ETL schema)
-- `prices.last_updated` (was `prices.ingestion_date`)
-- `products.building_id` foreign key added
-- `bookings` fields aligned: `arrival_date`, `nights`, `price_paid`
-
 ## Notes and Next Steps
-
-- ✅ ~~Align ETL schema with application schema~~ **COMPLETE**
 - Add indices on cluster attributes for faster cluster queries.
 - Build a nightly write-back sync to hotel systems for `price_confirmations.synced=false`.
 - Add endpoints to pivot multi-currency prices and sort by a selected currency if needed.
