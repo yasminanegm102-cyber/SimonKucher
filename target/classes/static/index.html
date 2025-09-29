@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Pricing Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        h1 { color: #2c3e50; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1em; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #f4f4f4; }
+        select, input[type="date"] { margin-right: 1em; }
+    </style>
+</head>
+<body>
+    <h1>Hotel Pricing Dashboard</h1>
+    <div>
+        <label>Building:
+            <select id="buildingFilter"></select>
+        </label>
+        <label>Room Type:
+            <select id="roomTypeFilter"></select>
+        </label>
+        <label>Beds:
+            <select id="bedsFilter"></select>
+        </label>
+        <label>Arrival From:
+            <input type="date" id="arrivalFromFilter">
+        </label>
+        <label>Arrival To:
+            <input type="date" id="arrivalToFilter">
+        </label>
+        <button onclick="loadData()">Filter</button>
+    </div>
+    <table id="priceTable">
+        <thead>
+            <tr>
+                <th>Building</th>
+                <th>Room</th>
+                <th>Beds</th>
+                <th>Room Type</th>
+                <th>Arrival Date</th>
+                <th>Prices</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+        async function fetchFilters() {
+            const res = await fetch('/api/filters/any');
+            return await res.json();
+        }
+        async function fetchData(params) {
+            const query = new URLSearchParams(params).toString();
+            const res = await fetch('/api/recommendations/grouped' + (query ? ('?' + query) : ''));
+            return await res.json();
+        }
+        function populateFilters(filters) {
+            const buildingFilter = document.getElementById('buildingFilter');
+            buildingFilter.innerHTML = '<option value="">All</option>' + filters.buildings.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+            const roomTypeFilter = document.getElementById('roomTypeFilter');
+            roomTypeFilter.innerHTML = '<option value="">All</option>' + (filters.roomTypes || []).map(rt => `<option value="${rt}">${rt}</option>`).join('');
+            const bedsFilter = document.getElementById('bedsFilter');
+            bedsFilter.innerHTML = '<option value="">All</option>' + (filters.beds || []).map(b => `<option value="${b}">${b}</option>`).join('');
+        }
+        function populateTable(data) {
+            const tbody = document.getElementById('priceTable').querySelector('tbody');
+            tbody.innerHTML = '';
+            data.forEach(b => {
+                b.products.forEach(p => {
+                    const prices = Object.entries(p.prices || {}).map(([cur, val]) => `${cur}: ${val}`).join(', ');
+                    const row = `<tr><td>${b.name}</td><td>${p.roomName}</td><td>${p.beds}</td><td>${p.roomType}</td><td>${p.arrivalDate || ''}</td><td>${prices}</td></tr>`;
+                    tbody.innerHTML += row;
+                });
+            });
+        }
+        async function loadData() {
+            const params = {};
+            const buildingId = document.getElementById('buildingFilter').value;
+            const roomType = document.getElementById('roomTypeFilter').value;
+            const beds = document.getElementById('bedsFilter').value;
+            const from = document.getElementById('arrivalFromFilter').value;
+            const to = document.getElementById('arrivalToFilter').value;
+            if (buildingId) params.buildingIds = buildingId;
+            if (roomType) params.roomType = roomType;
+            if (beds) params.beds = beds;
+            if (from) params.arrivalFrom = from;
+            if (to) params.arrivalTo = to;
+            const data = await fetchData(params);
+            populateTable(data);
+        }
+        // Initial load
+        fetchFilters().then(populateFilters);
+        loadData();
+    </script>
+</body>
+</html>
