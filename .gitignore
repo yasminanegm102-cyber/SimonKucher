@@ -1,0 +1,39 @@
+# ------------------------------
+# Java / Maven / Spring Boot
+# ------------------------------
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Maven target folder
+/target/
+
+# IDE files
+/.idea/
+/*.iml
+/.vscode/
+
+# Eclipse
+/.project
+/.classpath
+/.settings/
+
+# NetBeans
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
