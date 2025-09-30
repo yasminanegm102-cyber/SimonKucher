@@ -41,12 +41,28 @@ public class FilterController {
                 .distinct()
                 .collect(Collectors.toList());
 
+        List<String> regions = buildingRepository.findAll().stream()
+                .map(Building::getRegion)
+                .filter(r -> r != null && !r.isBlank())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
+        List<String> productGroups = productRepository.findAll().stream()
+                .map(p -> p.getProductGroup())
+                .filter(pg -> pg != null && !pg.isBlank())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
         return Map.of(
                 "buildings", buildings,
                 "roomTypes", roomTypes,
                 "beds", beds,
                 "arrivalDateRange", Map.of("min", minDate, "max", maxDate),
-                "buildingTypes", buildingTypes
+                "buildingTypes", buildingTypes,
+                "regions", regions,
+                "productGroups", productGroups
         );
     }
 }

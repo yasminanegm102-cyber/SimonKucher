@@ -17,4 +17,5 @@ public class Product {
     private String roomType;
     private Integer grade;
     private Boolean privatePool;
+    private String productGroup; // e.g., "LUXURY", "BUDGET", "FAMILY"
 }

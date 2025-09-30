@@ -5,7 +5,8 @@
 CREATE TABLE IF NOT EXISTS buildings (
     id VARCHAR(64) PRIMARY KEY,
     name VARCHAR(128) NOT NULL,
-    type VARCHAR(64)
+    type VARCHAR(64),
+    region VARCHAR(64)
 );
 
 -- Products table
@@ -18,6 +19,7 @@ CREATE TABLE IF NOT EXISTS products (
     room_type VARCHAR(64),
     grade INT,
     private_pool BOOLEAN,
+    product_group VARCHAR(64),
     CONSTRAINT fk_products_building FOREIGN KEY (building_id) REFERENCES buildings(id)
 );
 

@@ -11,4 +11,5 @@ public class Building {
     private String id;
     private String name;
     private String type;
+    private String region; // e.g., "EMEA", "AMER", "APAC"
 }

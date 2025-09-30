@@ -5,6 +5,7 @@ com\example\pricing\service\AlgorithmConfigService.class
 com\example\pricing\model\Product.class
 com\example\pricing\service\PricingService$PriceInfo.class
 com\example\pricing\model\User.class
+com\example\pricing\controller\UserController.class
 com\example\pricing\service\PricingService$PriceRecommendationDto.class
 com\example\pricing\model\Price.class
 com\example\pricing\config\BatchConfig.class

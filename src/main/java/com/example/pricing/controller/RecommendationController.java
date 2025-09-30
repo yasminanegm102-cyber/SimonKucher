@@ -36,11 +36,20 @@ public class RecommendationController {
             @RequestParam(required = false) String roomType,
             @RequestParam(required = false) Integer beds,
             @RequestParam(required = false) String arrivalFrom,
-            @RequestParam(required = false) String arrivalTo
+            @RequestParam(required = false) String arrivalTo,
+            @RequestParam(required = false) String productGroup,
+            @RequestParam(required = false) String region
     ) {
         List<Building> buildings = (buildingIds == null || buildingIds.isEmpty())
                 ? buildingRepo.findAll()
                 : buildingRepo.findAllById(buildingIds);
+
+        // Filter buildings by region if specified
+        if (region != null && !region.isBlank()) {
+            buildings = buildings.stream()
+                    .filter(b -> region.equals(b.getRegion()))
+                    .collect(Collectors.toList());
+        }
 
         java.time.LocalDate fromDate = arrivalFrom == null || arrivalFrom.isBlank() ? null : java.time.LocalDate.parse(arrivalFrom);
         java.time.LocalDate toDate = arrivalTo == null || arrivalTo.isBlank() ? null : java.time.LocalDate.parse(arrivalTo);
@@ -52,6 +61,7 @@ public class RecommendationController {
                 if (beds != null && !beds.equals(p.getNoOfBeds())) return false;
                 if (fromDate != null && (p.getArrivalDate() == null || p.getArrivalDate().isBefore(fromDate))) return false;
                 if (toDate != null && (p.getArrivalDate() == null || p.getArrivalDate().isAfter(toDate))) return false;
+                if (productGroup != null && !productGroup.isBlank() && !productGroup.equals(p.getProductGroup())) return false;
                 return true;
             }).toList();
 
